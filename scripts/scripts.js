@@ -28,6 +28,24 @@ function buildHeroBlock(main) {
 }
 
 /**
+ * Transforms a list into a language switcher dropdown.
+ * @param {HTMLUListElement} list The list element
+ */
+export function decorateLangSwitcher(list) {
+  if (list) {
+    const select = document.createElement('select');
+    [...list.children].forEach(({ textContent }) => {
+      const option = document.createElement('option');
+      option.value = textContent;
+      option.textContent = textContent;
+      select.append(option);
+    });
+    select.className = 'lang-switcher';
+    list.replaceWith(select);
+  }
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -71,10 +89,10 @@ async function loadEager(doc) {
  * Adds the favicon.
  * @param {string} href The favicon URL
  */
-export function addFavIcon(href) {
+export function addFavIcon(href, type = 'svg+xml') {
   const link = document.createElement('link');
   link.rel = 'icon';
-  link.type = 'image/svg+xml';
+  link.type = `image/${type}`;
   link.href = href;
   const existingLink = document.querySelector('head link[rel="icon"]');
   if (existingLink) {
@@ -92,14 +110,14 @@ async function loadLazy(doc) {
   await loadBlocks(main);
 
   const { hash } = window.location;
-  const element = hash ? main.querySelector(hash) : false;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
   loadHeader(doc.querySelector('header'));
   loadFooter(doc.querySelector('footer'));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.svg`);
+  addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.png`, 'png');
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
