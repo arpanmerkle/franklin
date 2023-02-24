@@ -42,3 +42,16 @@
     margin: 30px 0 70px;
 }
 
+
+.makeitblue {
+    background-color: var(--highlight-background-color);
+    color: var(--background-color);
+}
+
+.makeitblue h3 {
+    color: white;
+}
+
+.makeitblue h2 {
+    color: white;
+}
